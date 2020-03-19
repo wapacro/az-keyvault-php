@@ -42,9 +42,9 @@ class Secret {
 	 */
 	public function getSecretVersions(string $secretName) {
 		$endpoint = Url::fromString($this->keyVaultUrl)->withPath(sprintf('/secrets/%s/versions', $secretName));
-
 		$response = $this->client->get($endpoint);
 		$secretVersionRepository = new SecretVersionRepository();
+
 		foreach ($response->value as $version) {
 			$secretVersion = new SecretVersionEntity(
 				$secretName,
@@ -80,8 +80,8 @@ class Secret {
 		}
 
 		$endpoint = Url::fromString($this->keyVaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
-
 		$response = $this->client->get($endpoint);
+
 		return new SecretEntity(
 			$secret,
 			$secretVersion,
