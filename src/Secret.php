@@ -17,6 +17,10 @@ class Secret {
 	private $client;
 	private $keyVaultUrl;
 
+	/**
+	 * Secret constructor
+	 * @param string|null $url
+	 */
 	public function __construct(string $url = null) {
 		$this->client = new Client();
 		$this->accessToken = (new Identity())->getAccessToken();
@@ -26,6 +30,10 @@ class Secret {
 		}
 	}
 
+	/**
+	 * Set target KeyVault
+	 * @param string $url
+	 */
 	public function setKeyVault(string $url) {
 		$this->keyVaultUrl = $url;
 	}
@@ -67,7 +75,16 @@ class Secret {
 		return $secretVersionRepository;
 	}
 
-	public function getSecret(SecretVersionEntity $secret, string $secretVersion = null) {
+	/**
+	 * Returns the value for given secret,
+	 * either by passing an instance of
+	 * SecretVersionEntity or by secret
+	 * name and version
+	 * @param SecretVersionEntity|string $secret
+	 * @param string|null $secretVersion
+	 * @return SecretEntity
+	 */
+	public function getSecret($secret, string $secretVersion = null) {
 		if ($secret instanceof SecretVersionEntity && !$secretVersion) {
 			$secretVersion = $secret->id;
 			$secret = $secret->name;
