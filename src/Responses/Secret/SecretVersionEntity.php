@@ -19,6 +19,10 @@ class SecretVersionEntity implements EntityInterface {
 	/**
 	 * @var string
 	 */
+	public $content;
+	/**
+	 * @var string
+	 */
 	public $url;
 	/**
 	 * @var bool
@@ -29,11 +33,12 @@ class SecretVersionEntity implements EntityInterface {
 	 */
 	public $attributes;
 
-	public function __construct(string $name, string $id, string $url, SecretAttributeEntity $attributes) {
+	public function __construct(string $name, string $id, string $url, SecretAttributeEntity $attributes, string $content = null) {
 		$this->name = $name;
 		$this->id = $id;
 		$this->url = $url;
 		$this->attributes = $attributes;
+		$this->content = $content;
 	}
 
 }

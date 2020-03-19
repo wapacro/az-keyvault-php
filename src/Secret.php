@@ -55,7 +55,10 @@ class Secret {
 					$version->attributes->created,
 					$version->attributes->updated,
 					$version->attributes->recoveryLevel,
+					isset($version->attributes->exp) ? $version->attributes->exp : null,
+					isset($version->attributes->nbf) ? $version->attributes->nbf : null,
 				),
+				isset($version->contentType) ? $version->contentType : null,
 			);
 
 			$secretVersionRepository->add($secretVersion);
@@ -91,8 +94,11 @@ class Secret {
 				$response->attributes->enabled,
 				$response->attributes->created,
 				$response->attributes->updated,
-				$response->attributes->recoveryLevel
-			)
+				$response->attributes->recoveryLevel,
+				isset($response->attributes->exp) ? $response->attributes->exp : null,
+				isset($response->attributes->nbf) ? $response->attributes->nbf : null,
+			),
+			isset($response->contentType) ? $response->contentType : null,
 		);
 	}
 
