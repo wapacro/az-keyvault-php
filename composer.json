@@ -1,0 +1,31 @@
+{
+  "name": "citizen-of-planet-earth/az-keyvault-php",
+  "type": "library",
+  "description": "PHP Library to retrieve secrets from Azure KeyVault using managed identity",
+  "keywords": [
+    "azure",
+    "keyvault",
+    "secret"
+  ],
+  "homepage": "https://github.com/citizen-of-planet-earth/az-keyvault-php",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Roman Ackermann",
+      "homepage": "https://github.com/wapacro"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "~6.0",
+    "ext-json": "*",
+    "spatie/url": "^1.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "AzKeyVault\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  }
+}
