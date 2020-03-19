@@ -44,12 +44,12 @@ class Client {
 	/**
 	 * Wrapper for HTTP GET requests
 	 * @param $url
-	 * @param null $accessToken
+	 * @param string $accessToken
 	 * @param string $accessTokenHeader
 	 * @param string $apiVersion
 	 * @return mixed
 	 */
-	public function get($url, $accessToken = null, $accessTokenHeader = 'Authorization', $apiVersion = self::VAULT_API_VERSION) {
+	public function get(string $url, string $accessToken = null, string $accessTokenHeader = 'Authorization', string $apiVersion = self::VAULT_API_VERSION) {
 		$url = Url::fromString($url)->withQueryParameter('api-version', $apiVersion);
 		return json_decode($this->client->get($url, [
 			'headers' => [$accessTokenHeader => $accessToken ?? $this->accessToken],
