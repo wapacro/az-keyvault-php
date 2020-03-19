@@ -8,12 +8,10 @@ use AzKeyVault\Responses\Secret\SecretAttributeEntity;
 use AzKeyVault\Responses\Secret\SecretEntity;
 use AzKeyVault\Responses\Secret\SecretVersionEntity;
 use AzKeyVault\Responses\Secret\SecretVersionRepository;
-use GuzzleHttp\Client;
 use Spatie\Url\Url;
 
 class Secret {
 
-	private $accessToken;
 	private $client;
 	private $keyVaultUrl;
 
@@ -23,7 +21,6 @@ class Secret {
 	 */
 	public function __construct(string $url = null) {
 		$this->client = new Client();
-		$this->accessToken = (new Identity())->getAccessToken();
 
 		if ($url) {
 			$this->setKeyVault($url);
@@ -44,17 +41,9 @@ class Secret {
 	 * @return SecretVersionRepository
 	 */
 	public function getSecretVersions(string $secretName) {
-		$endpoint = Url::fromString($this->keyVaultUrl)
-			->withPath(sprintf('/secrets/%s/versions', $secretName))
-			->withQueryParameter('api-version', '7.0');
+		$endpoint = Url::fromString($this->keyVaultUrl)->withPath(sprintf('/secrets/%s/versions', $secretName));
 
-		$response = $this->client->get($endpoint, [
-			'headers' => [
-				'Authorization' => 'Bearer ' . $this->accessToken,
-			],
-		]);
-
-		$response = json_decode($response->getBody());
+		$response = $this->client->get($endpoint);
 		$secretVersionRepository = new SecretVersionRepository();
 		foreach ($response->value as $version) {
 			$secretVersion = new SecretVersionEntity(
@@ -90,17 +79,9 @@ class Secret {
 			$secret = $secret->name;
 		}
 
-		$endpoint = Url::fromString($this->keyVaultUrl)
-			->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion))
-			->withQueryParameter('api-version', '7.0');
+		$endpoint = Url::fromString($this->keyVaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
 
-		$response = $this->client->get($endpoint, [
-			'headers' => [
-				'Authorization' => 'Bearer ' . $this->accessToken,
-			],
-		]);
-
-		$response = json_decode($response->getBody());
+		$response = $this->client->get($endpoint);
 		return new SecretEntity(
 			$secret,
 			$secretVersion,
