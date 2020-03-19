@@ -25,10 +25,6 @@ class SecretEntity implements EntityInterface {
 	 */
 	public $url;
 	/**
-	 * @var bool
-	 */
-	public $enabled;
-	/**
 	 * @var SecretAttributeEntity
 	 */
 	public $attributes;
