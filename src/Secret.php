@@ -18,9 +18,10 @@ class Secret {
 	/**
 	 * Secret constructor
 	 * @param string|null $url
+	 * @param null $client
 	 */
-	public function __construct(string $url = null) {
-		$this->client = new Client();
+	public function __construct(string $url = null, $client = null) {
+		$this->client = $client ?? new Client();
 
 		if ($url) {
 			$this->setKeyVault($url);
