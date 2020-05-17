@@ -12,22 +12,27 @@ class SecretEntity implements EntityInterface {
 	 * @var string
 	 */
 	public $name;
+
 	/**
 	 * @var string
 	 */
 	public $version;
+
 	/**
 	 * @var string
 	 */
 	public $content;
+
 	/**
 	 * @var string
 	 */
 	public $secret;
+
 	/**
 	 * @var string
 	 */
 	public $url;
+
 	/**
 	 * @var SecretAttributeEntity
 	 */

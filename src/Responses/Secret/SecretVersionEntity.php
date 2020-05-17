@@ -12,14 +12,17 @@ class SecretVersionEntity implements EntityInterface {
 	 * @var string
 	 */
 	public $name;
+
 	/**
 	 * @var string
 	 */
 	public $id;
+
 	/**
 	 * @var string
 	 */
 	public $content;
+
 	/**
 	 * @var string
 	 */

@@ -13,22 +13,27 @@ class SecretAttributeEntity implements EntityInterface {
 	 * @var bool
 	 */
 	public $enabled;
+
 	/**
 	 * @var DateTime
 	 */
 	public $created;
+
 	/**
 	 * @var DateTime
 	 */
 	public $updated;
+
 	/**
 	 * @var string
 	 */
 	public $recoveryLevel;
+
 	/**
 	 * @var DateTime|null
 	 */
 	public $expires;
+
 	/**
 	 * @var DateTime|null
 	 */
