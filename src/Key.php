@@ -76,19 +76,11 @@ class Key extends Vault {
 				isset($response->attributes->exp) ? $response->attributes->exp : null,
 				isset($response->attributes->nbf) ? $response->attributes->nbf : null,
 			),
-			isset($response->key->key_hsm) ? $response->key->key_hsm : null,
 			isset($response->key->crv) ? $response->key->crv : null,
 			isset($response->key->x) ? $response->key->x : null,
 			isset($response->key->y) ? $response->key->y : null,
-			isset($response->key->d) ? $response->key->d : null,
-			isset($response->key->dp) ? $response->key->dp : null,
-			isset($response->key->dq) ? $response->key->dq : null,
 			isset($response->key->e) ? $response->key->e : null,
 			isset($response->key->n) ? $response->key->n : null,
-			isset($response->key->p) ? $response->key->p : null,
-			isset($response->key->q) ? $response->key->q : null,
-			isset($response->key->qi) ? $response->key->qi : null,
-			isset($response->key->k) ? $response->key->k : null,
 		);
 	}
 

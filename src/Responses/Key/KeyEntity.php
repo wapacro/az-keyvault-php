@@ -32,11 +32,6 @@ class KeyEntity implements EntityInterface {
 	public $url;
 
 	/**
-	 * @var string
-	 */
-	public $hsm;
-
-	/**
 	 * @var array
 	 */
 	public $operations;
@@ -61,25 +56,6 @@ class KeyEntity implements EntityInterface {
 	public $y;
 
 	/**
-	 * D component of EC private keys
-	 * or RSA private exponent
-	 * @var string
-	 */
-	public $d;
-
-	/**
-	 * RSA private key parameter
-	 * @var string
-	 */
-	public $dp;
-
-	/**
-	 * RSA private key parameter
-	 * @var string
-	 */
-	public $dq;
-
-	/**
 	 * RSA public exponent
 	 * @var string
 	 */
@@ -91,29 +67,6 @@ class KeyEntity implements EntityInterface {
 	 */
 	public $n;
 
-	/**
-	 * RSA secret prime
-	 * @var string
-	 */
-	public $p;
-
-	/**
-	 * RSA secret prime, with p < q
-	 * @var string
-	 */
-	public $q;
-
-	/**
-	 * RSA private key parameter
-	 * @var string
-	 */
-	public $qi;
-
-	/**
-	 * Symmetric key
-	 * @var string
-	 */
-	public $k;
 
 	/**
 	 * @var KeyAttributeEntity
@@ -122,28 +75,18 @@ class KeyEntity implements EntityInterface {
 
 	public function __construct(string $name, string $version, string $url,
 								string $type, array $operations, KeyAttributeEntity $attributes,
-								string $hsm = null, string $crv = null, string $x = null,
-								string $y = null, string $d = null, string $dp = null,
-								string $dq = null, string $e = null, string $n = null,
-								string $p = null, string $q = null, string $qi = null, string $k = null) {
+								string $crv = null, string $x = null, string $y = null,
+								string $e = null, string $n = null) {
 		$this->name = $name;
 		$this->version = $version;
 		$this->url = $url;
 		$this->type = $type;
 		$this->operations = $operations;
-		$this->hsm = $hsm;
 		$this->crv = $crv;
 		$this->x = $x;
 		$this->y = $y;
-		$this->d = $d;
-		$this->dp = $dp;
-		$this->dq = $dq;
 		$this->e = $e;
 		$this->n = $n;
-		$this->p = $p;
-		$this->q = $q;
-		$this->qi = $qi;
-		$this->k = $k;
 		$this->attributes = $attributes;
 	}
 
