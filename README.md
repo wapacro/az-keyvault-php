@@ -4,11 +4,11 @@ This library allows easy integration of
 in PHP applications.
 
 ### Highlights
-- [Built-in managed identity support](https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity)
+- [Built-in managed identity support](https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity)<br>
   Setup managed identities for your apps and centralise all secrets,
   keys and certificates in Azure Key Vault. Get secure access directly
   from your code without worrying about credentials.
-- Easy to use API
+- Easy to use API<br>
   This library's API is simple and easy to understand. After some setup
   in Azure and a few lines of code you're good to go!
 - Works with Windows & Linux based App Service Plans
