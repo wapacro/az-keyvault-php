@@ -6,7 +6,10 @@ use AzKeyVault\Client;
 
 abstract class Vault {
 
+	/** @var Client */
 	protected $client;
+
+	/** @var string */
 	protected $vaultUrl;
 
 	/**
