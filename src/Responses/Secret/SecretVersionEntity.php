@@ -27,10 +27,7 @@ class SecretVersionEntity implements EntityInterface {
 	 * @var string
 	 */
 	public $url;
-	/**
-	 * @var bool
-	 */
-	public $enabled;
+
 	/**
 	 * @var SecretAttributeEntity
 	 */
