@@ -1,5 +1,6 @@
 <?php
 
+namespace AzKeyVault\Tests;
 
 use AzKeyVault\Client;
 use AzKeyVault\Responses\Secret\SecretAttributeEntity;
