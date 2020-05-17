@@ -59,7 +59,7 @@ class Key extends Vault {
 			$key = $key->name;
 		}
 
-		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('', $key, $keyVersion));
+		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/keys/%s/%s', $key, $keyVersion));
 		$response = $this->client->get($endpoint);
 
 		return new KeyEntity(
