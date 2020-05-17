@@ -69,10 +69,6 @@ Get started in three simple steps!
    $pem = (new AzKeyVault\KeyUtil($value))->toPEM();
    $keyDetails = openssl_pkey_get_details(openssl_pkey_get_private($pem));
    var_dump($keyDetails);
-
-   // ... or easily generate the public key
-   // for the retrieved private key
-   $publicKey = (new AzKeyVault\KeyUtil($value))->toPublicKey();
    ````
 
 *Note:* `KeyUtil` supports RSA and EC keys
