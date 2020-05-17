@@ -147,8 +147,7 @@ class KeyEntity implements EntityInterface {
 		$this->attributes = $attributes;
 	}
 
-	public
-	function __toString() {
+	public function __toString() {
 		return ''; // todo: Return something useful
 	}
 
