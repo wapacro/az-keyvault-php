@@ -4,11 +4,11 @@ This library allows easy integration of
 in PHP applications.
 
 ### Highlights
-- [Built-in managed identity support](https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity)  
+- [Built-in managed identity support](https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity)
   Setup managed identities for your apps and centralise all secrets,
   keys and certificates in Azure Key Vault. Get secure access directly
   from your code without worrying about credentials.
-- Easy to use API  
+- Easy to use API
   This library's API is simple and easy to understand. After some setup
   in Azure and a few lines of code you're good to go!
 - Works with Windows & Linux based App Service Plans
@@ -22,7 +22,7 @@ Get started in three simple steps!
 2. Install this package in your project
    using Composer
    ```
-   composer install citizen-of-planet-earth/az-keyvault-php
+   composer install wapacro/az-keyvault-php
    ````
 3. Access your secrets & keys in Key Vault using the simple API:
    ```php

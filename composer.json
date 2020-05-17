@@ -1,13 +1,13 @@
 {
-  "name": "citizen-of-planet-earth/az-keyvault-php",
+  "name": "wapacro/az-keyvault-php",
   "type": "library",
-  "description": "PHP Library to retrieve secrets from Azure KeyVault using managed identity",
+  "description": "PHP Library to work with Azure KeyVault using managed identity",
   "keywords": [
     "azure",
     "keyvault",
     "secret"
   ],
-  "homepage": "https://github.com/citizen-of-planet-earth/az-keyvault-php",
+  "homepage": "https://github.com/wapacro/az-keyvault-php",
   "license": "MIT",
   "authors": [
     {
