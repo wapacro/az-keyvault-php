@@ -10,31 +10,7 @@ use AzKeyVault\Responses\Secret\SecretVersionEntity;
 use AzKeyVault\Responses\Secret\SecretVersionRepository;
 use Spatie\Url\Url;
 
-class Secret {
-
-	private $client;
-	private $keyVaultUrl;
-
-	/**
-	 * Secret constructor
-	 * @param string|null $url
-	 * @param null $client
-	 */
-	public function __construct(string $url = null, $client = null) {
-		$this->client = $client ?? new Client();
-
-		if ($url) {
-			$this->setKeyVault($url);
-		}
-	}
-
-	/**
-	 * Set target KeyVault
-	 * @param string $url
-	 */
-	public function setKeyVault(string $url) {
-		$this->keyVaultUrl = $url;
-	}
+class Secret extends Vault {
 
 	/**
 	 * Returns all versions for given secret
@@ -42,7 +18,7 @@ class Secret {
 	 * @return SecretVersionRepository
 	 */
 	public function getSecretVersions(string $secretName) {
-		$endpoint = Url::fromString($this->keyVaultUrl)->withPath(sprintf('/secrets/%s/versions', $secretName));
+		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/versions', $secretName));
 		$response = $this->client->get($endpoint);
 		$secretVersionRepository = new SecretVersionRepository();
 
@@ -83,7 +59,7 @@ class Secret {
 			$secret = $secret->name;
 		}
 
-		$endpoint = Url::fromString($this->keyVaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
+		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
 		$response = $this->client->get($endpoint);
 
 		return new SecretEntity(
