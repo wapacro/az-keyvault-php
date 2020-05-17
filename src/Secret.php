@@ -4,6 +4,7 @@
 namespace AzKeyVault;
 
 
+use AzKeyVault\Abstracts\Vault;
 use AzKeyVault\Responses\Secret\SecretAttributeEntity;
 use AzKeyVault\Responses\Secret\SecretEntity;
 use AzKeyVault\Responses\Secret\SecretVersionEntity;

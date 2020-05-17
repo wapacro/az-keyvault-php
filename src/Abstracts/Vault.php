@@ -1,6 +1,6 @@
 <?php
 
-namespace AzKeyVault;
+namespace AzKeyVault\Abstracts;
 
 abstract class Vault {
 
