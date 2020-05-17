@@ -4,6 +4,7 @@
 namespace AzKeyVault\Responses\Secret;
 
 
+use AzKeyVault\Contracts\AttributeInterface;
 use AzKeyVault\Contracts\EntityInterface;
 
 class SecretEntity implements EntityInterface {
@@ -49,6 +50,10 @@ class SecretEntity implements EntityInterface {
 
 	public function __toString() {
 		return $this->secret;
+	}
+
+	public function getAttributes(): AttributeInterface {
+		return $this->attributes;
 	}
 
 }

@@ -4,10 +4,10 @@
 namespace AzKeyVault\Responses\Key;
 
 
-use AzKeyVault\Contracts\EntityInterface;
+use AzKeyVault\Contracts\AttributeInterface;
 use DateTime;
 
-class KeyAttributeEntity implements EntityInterface {
+class KeyAttributeEntity implements AttributeInterface {
 
 	/**
 	 * @var bool
@@ -46,6 +46,10 @@ class KeyAttributeEntity implements EntityInterface {
 		$this->recoveryLevel = $recoveryLevel;
 		$this->expires = $expires ? new DateTime('@' . $expires) : null;
 		$this->notBefore = $notBefore ? new DateTime('@' . $notBefore) : null;
+	}
+
+	public function isEnabled() {
+		return $this->enabled;
 	}
 
 }

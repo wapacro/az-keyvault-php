@@ -4,6 +4,7 @@
 namespace AzKeyVault\Responses\Key;
 
 
+use AzKeyVault\Contracts\AttributeInterface;
 use AzKeyVault\Contracts\EntityInterface;
 
 class KeyVersionEntity implements EntityInterface {
@@ -33,6 +34,10 @@ class KeyVersionEntity implements EntityInterface {
 		$this->id = $id;
 		$this->url = $url;
 		$this->attributes = $attributes;
+	}
+
+	public function getAttributes(): AttributeInterface {
+		return $this->attributes;
 	}
 
 }

@@ -4,10 +4,10 @@
 namespace AzKeyVault\Responses\Secret;
 
 
-use AzKeyVault\Contracts\EntityInterface;
+use AzKeyVault\Contracts\AttributeInterface;
 use DateTime;
 
-class SecretAttributeEntity implements EntityInterface {
+class SecretAttributeEntity implements AttributeInterface {
 
 	/**
 	 * @var bool
@@ -48,5 +48,9 @@ class SecretAttributeEntity implements EntityInterface {
 		$this->notBefore = $notBefore ? new DateTime('@' . $notBefore) : null;
 	}
 
+
+	public function isEnabled() {
+		return $this->enabled;
+	}
 
 }

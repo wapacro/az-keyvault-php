@@ -4,6 +4,7 @@
 namespace AzKeyVault\Responses\Key;
 
 
+use AzKeyVault\Contracts\AttributeInterface;
 use AzKeyVault\Contracts\EntityInterface;
 
 class KeyEntity implements EntityInterface {
@@ -149,6 +150,10 @@ class KeyEntity implements EntityInterface {
 	public
 	function __toString() {
 		return ''; // todo: Return something useful
+	}
+
+	public function getAttributes(): AttributeInterface {
+		return $this->attributes;
 	}
 
 }

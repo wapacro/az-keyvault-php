@@ -17,7 +17,7 @@ abstract class Repository implements RepositoryInterface {
 
 	public function enabled() {
 		return array_filter($this->all(), function (EntityInterface $entity) {
-			return $entity->attributes->enabled;
+			return $entity->getAttributes()->isEnabled();
 		});
 	}
 

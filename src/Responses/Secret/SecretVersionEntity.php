@@ -4,6 +4,7 @@
 namespace AzKeyVault\Responses\Secret;
 
 
+use AzKeyVault\Contracts\AttributeInterface;
 use AzKeyVault\Contracts\EntityInterface;
 
 class SecretVersionEntity implements EntityInterface {
@@ -39,6 +40,10 @@ class SecretVersionEntity implements EntityInterface {
 		$this->url = $url;
 		$this->attributes = $attributes;
 		$this->content = $content;
+	}
+
+	public function getAttributes(): AttributeInterface {
+		return $this->attributes;
 	}
 
 }
