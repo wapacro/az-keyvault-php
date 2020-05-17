@@ -2,6 +2,8 @@
 
 namespace AzKeyVault\Abstracts;
 
+use AzKeyVault\Client;
+
 abstract class Vault {
 
 	protected $client;
