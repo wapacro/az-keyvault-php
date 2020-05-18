@@ -91,7 +91,7 @@ class KeyEntity implements EntityInterface {
 	}
 
 	public function __toString() {
-		return ''; // todo: Return something useful
+		return $this->type;
 	}
 
 	public function getAttributes(): AttributeInterface {
