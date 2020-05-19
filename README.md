@@ -22,7 +22,7 @@ Get started in three simple steps!
 2. Install this package in your project
    using Composer
    ```
-   composer install wapacro/az-keyvault-php
+   composer require wapacro/az-keyvault-php
    ````
 3. Access your secrets & keys in Key Vault using the simple API:
    ```php
