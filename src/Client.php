@@ -8,7 +8,7 @@ use Spatie\Url\Url;
 
 class Client {
 
-	const OAUTH_API_VERSION = '2017-09-01';
+	const OAUTH_API_VERSION = '2019-08-01';
 	const VAULT_API_VERSION = '7.0';
 
 	/**
@@ -33,12 +33,12 @@ class Client {
 	 * @return string
 	 */
 	protected function getAccessToken() {
-		$endpoint = getenv('MSI_ENDPOINT');
-		$secret = getenv('MSI_SECRET');
+		$endpoint = getenv('IDENTITY_ENDPOINT');
+		$idHeader = getenv('IDENTITY_HEADER');
 		$resource = 'https://vault.azure.net';
 
 		$endpoint = Url::fromString($endpoint)->withQueryParameter('resource', $resource);
-		return 'Bearer ' . $this->get($endpoint, $secret, 'secret', self::OAUTH_API_VERSION)->access_token;
+		return 'Bearer ' . $this->get($endpoint, $idHeader, 'X-IDENTITY-HEADER', self::OAUTH_API_VERSION)->access_token;
 	}
 
 	/**
