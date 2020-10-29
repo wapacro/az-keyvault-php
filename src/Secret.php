@@ -65,6 +65,11 @@ class Secret extends Vault {
 		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
 		$response = $this->client->get($endpoint);
 
+		// Set secretVersion if not provide.
+		if ($secretVersion === null) {
+			$secretVersion = Url::fromString($response->id)->getLastSegment();
+		}
+
 		return new SecretEntity(
 			$secret,
 			$secretVersion,
