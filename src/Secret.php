@@ -60,12 +60,12 @@ class Secret extends Vault {
 			$secret = $secret->name;
 		}
 
-		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
+		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion ?? ''));
 		$response = $this->client->get($endpoint);
 
 		return new SecretEntity(
 			$secret,
-			$secretVersion,
+			$secretVersion ?? '',
 			$response->value,
 			$response->id,
 			new SecretAttributeEntity(

@@ -10,6 +10,7 @@ class Client {
 
 	const OAUTH_API_VERSION = '2019-08-01';
 	const VAULT_API_VERSION = '7.0';
+	const VAULT_RESOURCE = "https://vault.azure.net";
 
 	/**
 	 * @var \GuzzleHttp\Client
@@ -35,9 +36,8 @@ class Client {
 	protected function getAccessToken() {
 		$endpoint = getenv('IDENTITY_ENDPOINT');
 		$idHeader = getenv('IDENTITY_HEADER');
-		$resource = 'https://vault.azure.net';
 
-		$endpoint = Url::fromString($endpoint)->withQueryParameter('resource', $resource);
+		$endpoint = Url::fromString($endpoint)->withQueryParameter('resource', self::VAULT_RESOURCE);
 		return 'Bearer ' . $this->get($endpoint, $idHeader, 'X-IDENTITY-HEADER', self::OAUTH_API_VERSION)->access_token;
 	}
 
