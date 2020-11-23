@@ -33,4 +33,7 @@ abstract class Vault {
 		$this->vaultUrl = $url;
 	}
 
+	public function getKeyVault(): string {
+		return $this->vaultUrl;
+	}
 }
