@@ -87,6 +87,8 @@ class Secret extends Vault {
 
     /**
      * Returns list of secrets for current vault
+     * @param string|null $nextLink
+     * @return IdRepository
      */
     public function getSecrets(string $nextLink = null): IdRepository {
         // Handle the nextLink paging
