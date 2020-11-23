@@ -35,6 +35,7 @@
   },
   "require-dev": {
     "ext-openssl": "*",
-    "phpunit/phpunit": "^9.0"
+    "phpunit/phpunit": "^9.0",
+    "friendsofphp/php-cs-fixer": "^2.16"
   }
 }
