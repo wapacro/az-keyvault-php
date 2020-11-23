@@ -3,123 +3,121 @@
 
 namespace AzKeyVault;
 
-
+use Spatie\Url\Url;
 use AzKeyVault\Abstracts\Vault;
 use AzKeyVault\Responses\IdEntity;
 use AzKeyVault\Responses\IdRepository;
-use AzKeyVault\Responses\Secret\SecretAttributeEntity;
 use AzKeyVault\Responses\Secret\SecretEntity;
 use AzKeyVault\Responses\Secret\SecretVersionEntity;
+use AzKeyVault\Responses\Secret\SecretAttributeEntity;
 use AzKeyVault\Responses\Secret\SecretVersionRepository;
-use Spatie\Url\Url;
 
 class Secret extends Vault {
+    /**
+     * Returns all versions for given secret
+     * @param string $secretName
+     * @return SecretVersionRepository
+     */
+    public function getSecretVersions(string $secretName) {
+        $endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/versions', $secretName));
+        $response = $this->client->get($endpoint);
+        $secretVersionRepository = new SecretVersionRepository();
 
-	/**
-	 * Returns all versions for given secret
-	 * @param string $secretName
-	 * @return SecretVersionRepository
-	 */
-	public function getSecretVersions(string $secretName) {
-		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/versions', $secretName));
-		$response = $this->client->get($endpoint);
-		$secretVersionRepository = new SecretVersionRepository();
+        foreach ($response->value as $version) {
+            $secretVersion = new SecretVersionEntity(
+                $secretName,
+                Url::fromString($version->id)->getLastSegment(),
+                $version->id,
+                new SecretAttributeEntity(
+                    $version->attributes->enabled,
+                    $version->attributes->created,
+                    $version->attributes->updated,
+                    $version->attributes->recoveryLevel,
+                    $version->attributes->exp ?? null,
+                    $version->attributes->nbf ?? null,
+                ),
+                $version->contentType ?? null,
+            );
 
-		foreach ($response->value as $version) {
-			$secretVersion = new SecretVersionEntity(
-				$secretName,
-				Url::fromString($version->id)->getLastSegment(),
-				$version->id,
-				new SecretAttributeEntity(
-					$version->attributes->enabled,
-					$version->attributes->created,
-					$version->attributes->updated,
-					$version->attributes->recoveryLevel,
-					isset($version->attributes->exp) ? $version->attributes->exp : null,
-					isset($version->attributes->nbf) ? $version->attributes->nbf : null,
-				),
-				isset($version->contentType) ? $version->contentType : null,
-			);
+            $secretVersionRepository->add($secretVersion);
+        }
 
-			$secretVersionRepository->add($secretVersion);
-		}
+        return $secretVersionRepository;
+    }
 
-		return $secretVersionRepository;
-	}
+    /**
+     * Returns the value for given secret,
+     * either by passing an instance of
+     * SecretVersionEntity or by secret
+     * name and version
+     * @param SecretVersionEntity|string $secret
+     * @param string|null $secretVersion
+     * @return SecretEntity
+     */
+    public function getSecret($secret, string $secretVersion = null) {
+        if ($secret instanceof SecretVersionEntity && !$secretVersion) {
+            $secretVersion = $secret->id;
+            $secret = $secret->name;
+        }
 
-	/**
-	 * Returns the value for given secret,
-	 * either by passing an instance of
-	 * SecretVersionEntity or by secret
-	 * name and version
-	 * @param SecretVersionEntity|string $secret
-	 * @param string|null $secretVersion
-	 * @return SecretEntity
-	 */
-	public function getSecret($secret, string $secretVersion = null) {
-		if ($secret instanceof SecretVersionEntity && !$secretVersion) {
-			$secretVersion = $secret->id;
-			$secret = $secret->name;
-		}
+        $endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
+        $response = $this->client->get($endpoint);
 
-		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
-		$response = $this->client->get($endpoint);
+        // Set secretVersion if not provide.
+        if ($secretVersion === null) {
+            $secretVersion = Url::fromString($response->id)->getLastSegment();
+        }
 
-		// Set secretVersion if not provide.
-		if ($secretVersion === null) {
-			$secretVersion = Url::fromString($response->id)->getLastSegment();
-		}
+        return new SecretEntity(
+            $secret,
+            $secretVersion,
+            $response->value,
+            $response->id,
+            new SecretAttributeEntity(
+                $response->attributes->enabled,
+                $response->attributes->created,
+                $response->attributes->updated,
+                $response->attributes->recoveryLevel,
+                $response->attributes->exp ?? null,
+                $response->attributes->nbf ?? null,
+            ),
+            $response->contentType ?? null,
+        );
+    }
 
-		return new SecretEntity(
-			$secret,
-			$secretVersion,
-			$response->value,
-			$response->id,
-			new SecretAttributeEntity(
-				$response->attributes->enabled,
-				$response->attributes->created,
-				$response->attributes->updated,
-				$response->attributes->recoveryLevel,
-				isset($response->attributes->exp) ? $response->attributes->exp : null,
-				isset($response->attributes->nbf) ? $response->attributes->nbf : null,
-			),
-			isset($response->contentType) ? $response->contentType : null,
-		);
-	}
+    /**
+     * Returns list of secrets for current vault
+     */
+    public function getSecrets(string $nextLink = null): IdRepository {
+        // Handle the nextLink paging
+        // https://docs.microsoft.com/en-us/rest/api/azure/#async-operations-throttling-and-paging
+        if ($nextLink !== null) {
+            $endpoint = Url::fromString($nextLink);
+        } else {
+            $endpoint = Url::fromString($this->vaultUrl)->withPath('/secrets');
+        }
 
-	/**
-	 * Returns list of secrets for current vault
-	 */
-	public function getSecrets(string $nextLink = null): IdRepository {
-		// Handle the nextLink paging
-		// https://docs.microsoft.com/en-us/rest/api/azure/#async-operations-throttling-and-paging
-		if ($nextLink !== null) {
-			$endpoint = Url::fromString($nextLink);
-		} else {
-			$endpoint = Url::fromString($this->vaultUrl)->withPath('/secrets');
-		}
+        $response = $this->client->get($endpoint);
+        $idRepository = new IdRepository();
 
-		$response = $this->client->get($endpoint);
-		$idRepository = new IdRepository();
+        foreach ($response->value as $secret) {
+            $secretId = new IdEntity(
+                $secret->id,
+                new SecretAttributeEntity(
+                    $secret->attributes->enabled,
+                    $secret->attributes->created,
+                    $secret->attributes->updated,
+                    $secret->attributes->recoveryLevel,
+                    $secret->attributes->exp ?? null,
+                    $secret->attributes->nbf ?? null,
+                ),
+                $secret->contentType ?? null,
+            );
 
-		foreach ($response->value as $secret) {
-			$secretId = new IdEntity(
-				$secret->id,
-				new SecretAttributeEntity(
-					$secret->attributes->enabled,
-					$secret->attributes->created,
-					$secret->attributes->updated,
-					$secret->attributes->recoveryLevel,
-					isset($secret->attributes->exp) ? $secret->attributes->exp : null,
-					isset($secret->attributes->nbf) ? $secret->attributes->nbf : null,
-				),
-				isset($secret->contentType) ? $secret->contentType : null,
-			);
+            $idRepository->add($secretId);
+        }
+        $idRepository->setNextLink($response->nextLink);
 
-			$idRepository->add($secretId);
-		}
-		$idRepository->setNextLink($response->nextLink);
-
-		return $idRepository;
-	}
+        return $idRepository;
+    }
 }

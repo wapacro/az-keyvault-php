@@ -3,9 +3,6 @@
 
 namespace AzKeyVault\Contracts;
 
-
 interface AttributeInterface {
-
-	public function isEnabled();
-
+    public function isEnabled();
 }
