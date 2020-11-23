@@ -5,6 +5,8 @@ namespace AzKeyVault;
 
 
 use AzKeyVault\Abstracts\Vault;
+use AzKeyVault\Responses\IdEntity;
+use AzKeyVault\Responses\IdRepository;
 use AzKeyVault\Responses\Secret\SecretAttributeEntity;
 use AzKeyVault\Responses\Secret\SecretEntity;
 use AzKeyVault\Responses\Secret\SecretVersionEntity;
@@ -63,6 +65,11 @@ class Secret extends Vault {
 		$endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s/%s', $secret, $secretVersion));
 		$response = $this->client->get($endpoint);
 
+		// Set secretVersion if not provide.
+		if ($secretVersion === null) {
+			$secretVersion = Url::fromString($response->id)->getLastSegment();
+		}
+
 		return new SecretEntity(
 			$secret,
 			$secretVersion,
@@ -80,4 +87,39 @@ class Secret extends Vault {
 		);
 	}
 
+	/**
+	 * Returns list of secrets for current vault
+	 */
+	public function getSecrets(string $nextLink = null): IdRepository {
+		// Handle the nextLink paging
+		// https://docs.microsoft.com/en-us/rest/api/azure/#async-operations-throttling-and-paging
+		if ($nextLink !== null) {
+			$endpoint = Url::fromString($nextLink);
+		} else {
+			$endpoint = Url::fromString($this->vaultUrl)->withPath('/secrets');
+		}
+
+		$response = $this->client->get($endpoint);
+		$idRepository = new IdRepository();
+
+		foreach ($response->value as $secret) {
+			$secretId = new IdEntity(
+				$secret->id,
+				new SecretAttributeEntity(
+					$secret->attributes->enabled,
+					$secret->attributes->created,
+					$secret->attributes->updated,
+					$secret->attributes->recoveryLevel,
+					isset($secret->attributes->exp) ? $secret->attributes->exp : null,
+					isset($secret->attributes->nbf) ? $secret->attributes->nbf : null,
+				),
+				isset($secret->contentType) ? $secret->contentType : null,
+			);
+
+			$idRepository->add($secretId);
+		}
+		$idRepository->setNextLink($response->nextLink);
+
+		return $idRepository;
+	}
 }

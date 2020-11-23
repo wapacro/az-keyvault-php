@@ -32,6 +32,14 @@ Get started in three simple steps!
     */
    $secret = new AzKeyVault\Secret('https://my-keyvault-dns.vault.azure.net');
 
+   // If you want to get all secrets with the maxresults (default to 25):
+   $secrets = $secret->getSecrets('https://my-keyvault-dns.vault.azure.net/secrets');
+   // ... else get next paging via nextLink
+   $secrets = $secret->getSecrets($nextLink);
+
+   // If you want the latest secret
+   $value = $secret->getSecret('mySecretName');
+
    // If you want a specific secret version:
    $value = $secret->getSecret('mySecretName', '9fe63d32-5eb0-47f2-8ef8-version-id');
 
