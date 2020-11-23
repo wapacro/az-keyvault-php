@@ -11,7 +11,7 @@ in PHP applications.
 - Easy to use API<br>
   This library's API is simple and easy to understand. After some setup
   in Azure and a few lines of code you're good to go!
-- Works with Windows & Linux based App Service Plans
+- Works with Windows & Linux based App Service Plans and Virtual Machines
 
 ## How to use
 Get started in three simple steps!
