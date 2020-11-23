@@ -9,7 +9,8 @@ use AzKeyVault\Responses\Key\KeyAttributeEntity;
 use AzKeyVault\Responses\Secret\SecretAttributeEntity;
 
 class IdEntity implements EntityInterface {
-    public string $id;
+    /** @var string */
+    public $id;
 
     /** @var KeyAttributeEntity | SecretAttributeEntity */
     public $attributes;
