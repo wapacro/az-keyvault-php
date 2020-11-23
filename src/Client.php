@@ -39,16 +39,18 @@ class Client {
         ])->getBody());
     }
 
-    /**
-     * Get access token using managed identity
-     * @return string
-     */
-    protected function getAccessToken() {
-        $endpoint = getenv('IDENTITY_ENDPOINT');
-        $idHeader = getenv('IDENTITY_HEADER');
-        $resource = 'https://vault.azure.net';
+	/**
+	 * Get access token using managed identity
+	 * @return string
+	 */
+	protected function getAccessToken() {
+		// Get MSI endpoint & token from environment (App Service) or use hardcoded values in case of VM
+		$endpoint = $_ENV['IDENTITY_ENDPOINT'] ?? 'http://169.254.169.254/metadata/identity/oauth2/token';
+		$idHeaderValue = $_ENV['IDENTITY_HEADER'] ?? 'true';
+		$idHeaderName = isset($_ENV['IDENTITY_ENDPOINT']) ? 'X-IDENTITY-HEADER' : 'Metadata';
+		$resource = 'https://vault.azure.net';
 
-        $endpoint = Url::fromString($endpoint)->withQueryParameter('resource', $resource);
-        return 'Bearer ' . $this->get($endpoint, $idHeader, 'X-IDENTITY-HEADER', self::OAUTH_API_VERSION)->access_token;
-    }
+		$endpoint = Url::fromString($endpoint)->withQueryParameter('resource', $resource);
+		return 'Bearer ' . $this->get($endpoint, $idHeaderValue, $idHeaderName, self::OAUTH_API_VERSION)->access_token;
+	}
 }
