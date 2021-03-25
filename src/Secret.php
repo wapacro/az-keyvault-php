@@ -122,4 +122,47 @@ class Secret extends Vault {
 
         return $idRepository;
     }
+
+    /**
+     * Sets a secret in a specified key vault.
+	 * If the named secret already exists, Azure Key Vault creates a new version of that secret.
+     * @param string $secretName
+     * @param string $value
+     * @param SecretAttributeEntity|null $secretAttributes
+     * @param string|null $contentType
+     * @param array|null $tags
+     * @return SecretEntity
+     */
+    public function setSecret(string $secretName, string $value, $secretAttributes = null, string $contentType = null, array $tags = null) {
+        $endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s', $secretName));
+        $body = ['value' => $value];
+        if ($secretAttributes instanceOf SecretAttributeEntity) {
+			$body['attributes'] = $secretAttributes;
+		}
+        if (!$contentType) {
+			$body['contentType'] = $contentType;
+		}
+        if (!$tags) {
+			$body['tags'] = $tags;
+		}
+        $response = $this->client->post($endpoint, $body);
+
+        $secretVersion = Url::fromString($response->id)->getLastSegment();
+
+        return new SecretEntity(
+            $secretName,
+            $secretVersion,
+            $response->value,
+            $response->id,
+            new SecretAttributeEntity(
+                $response->attributes->enabled,
+                $response->attributes->created,
+                $response->attributes->updated,
+                $response->attributes->recoveryLevel,
+                $response->attributes->exp ?? null,
+                $response->attributes->nbf ?? null,
+            ),
+            $response->contentType ?? null,
+        );
+    }
 }

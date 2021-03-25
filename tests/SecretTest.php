@@ -223,4 +223,37 @@ class SecretTest extends TestCase {
         $secret = new Secret('https://kv-sdk-test.vault-int.azure-int.net', $this->clientMock);
         $this->assertEquals($expectedIdRepository, $secret->getSecrets('https://my-keyvault-dns.vault.azure.net/secrets'));
     }
+
+    /**
+     * Set secret by
+     * explicitly specifying name and value
+     */
+    public function testSetSecretByNameAndValue(): void {
+        $this->clientMock->method('post')->willReturn(json_decode(json_encode([
+            'value' => 'mysecretvalue',
+            'id' => 'https://kv-sdk-test.vault-int.azure-int.net/secrets/mysecretname/4387e9f3d6e14c459867679a90fd0f79',
+            'attributes' => [
+                'enabled' => true,
+                'created' => 1493938410,
+                'updated' => 1493938410,
+                'recoveryLevel' => 'Recoverable+Purgeable',
+            ],
+        ])));
+
+        $expectedSecretEntity = new SecretEntity(
+            'mysecretname',
+            '4387e9f3d6e14c459867679a90fd0f79',
+            'mysecretvalue',
+            'https://kv-sdk-test.vault-int.azure-int.net/secrets/mysecretname/4387e9f3d6e14c459867679a90fd0f79',
+            new SecretAttributeEntity(
+                true,
+                1493938410,
+                1493938410,
+                'Recoverable+Purgeable',
+            )
+        );
+
+        $secret = new Secret('https://kv-sdk-test.vault-int.azure-int.net', $this->clientMock);
+        $this->assertEquals($expectedSecretEntity, $secret->setSecret('mysecretname', 'mysecretvalue'));
+    }
 }

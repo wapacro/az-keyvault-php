@@ -39,6 +39,23 @@ class Client {
         ])->getBody());
     }
 
+	/**
+	 * Wrapper for HTTP Post requests
+	 * @param string $url
+	 * @param array $body
+	 * @param string|null $accessToken
+	 * @param string $accessTokenHeader
+	 * @param string $apiVersion
+	 * @return mixed
+	 */
+    public function post(string $url, array $body, string $accessToken = null, string $accessTokenHeader = 'Authorization', string $apiVersion = self::VAULT_API_VERSION) {
+        $url = Url::fromString($url)->withQueryParameter('api-version', $apiVersion);
+        return json_decode($this->client->post($url, [
+            'headers' => [$accessTokenHeader => $accessToken ?? $this->accessToken],
+			'body' => $body,
+        ])->getBody());
+    }
+
     /**
      * Get access token using managed identity
      * @return string
