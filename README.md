@@ -53,6 +53,11 @@ Get started in three simple steps!
    echo $value->secret;
    // prints: my super secret message
 
+   // If you want to set secret or update secret with newer version:
+   $value = $secret->setSecret('mySecretName', 'mySecretValue');
+   echo $value->secret;
+   // prints: mySecretValue
+
    /**
     * Keys
     */
