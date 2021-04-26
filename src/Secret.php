@@ -145,7 +145,7 @@ class Secret extends Vault {
         if (!$tags) {
 			$body['tags'] = $tags;
 		}
-        $response = $this->client->post($endpoint, $body);
+        $response = $this->client->request($endpoint, $body, "PUT");
 
         $secretVersion = Url::fromString($response->id)->getLastSegment();
 
