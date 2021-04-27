@@ -229,7 +229,7 @@ class SecretTest extends TestCase {
      * explicitly specifying name and value
      */
     public function testSetSecretByNameAndValue(): void {
-        $this->clientMock->method('post')->willReturn(json_decode(json_encode([
+        $this->clientMock->method('request')->willReturn(json_decode(json_encode([
             'value' => 'mysecretvalue',
             'id' => 'https://kv-sdk-test.vault-int.azure-int.net/secrets/mysecretname/4387e9f3d6e14c459867679a90fd0f79',
             'attributes' => [

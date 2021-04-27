@@ -40,19 +40,20 @@ class Client {
     }
 
 	/**
-	 * Wrapper for HTTP Post requests
+	 * Wrapper for HTTP Post/Put/Patch requests
 	 * @param string $url
 	 * @param array $body
+	 * @param string $method
 	 * @param string|null $accessToken
 	 * @param string $accessTokenHeader
 	 * @param string $apiVersion
 	 * @return mixed
 	 */
-    public function post(string $url, array $body, string $accessToken = null, string $accessTokenHeader = 'Authorization', string $apiVersion = self::VAULT_API_VERSION) {
+    public function request(string $url, array $body, string $method = "POST", string $accessToken = null, string $accessTokenHeader = 'Authorization', string $apiVersion = self::VAULT_API_VERSION) {
         $url = Url::fromString($url)->withQueryParameter('api-version', $apiVersion);
-        return json_decode($this->client->post($url, [
+        return json_decode($this->client->request($method, $url, [
             'headers' => [$accessTokenHeader => $accessToken ?? $this->accessToken],
-			'body' => $body,
+			'json' => $body,
         ])->getBody());
     }
 
