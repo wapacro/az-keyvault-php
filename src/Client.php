@@ -64,7 +64,7 @@ class Client {
         // Get MSI endpoint & token from environment (App Service) or use hardcoded values in case of VM
         $endpoint = $this->env('IDENTITY_ENDPOINT', 'http://169.254.169.254/metadata/identity/oauth2/token');
         $idHeaderValue = $this->env('IDENTITY_HEADER', 'true');
-        $idHeaderName = !empty($this->env('IDENTITY_HEADER')) ? 'X-IDENTITY-HEADER' : 'Metadata';
+        $idHeaderName = !empty($this->env('IDENTITY_ENDPOINT')) ? 'X-IDENTITY-HEADER' : 'Metadata';
         $resource = 'https://vault.azure.net';
 
         $endpoint = Url::fromString($endpoint)->withQueryParameter('resource', $resource);
