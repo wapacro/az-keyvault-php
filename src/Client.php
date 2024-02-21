@@ -5,8 +5,9 @@ namespace AzKeyVault;
 
 use Spatie\Url\Url;
 
-class Client {
-    public const OAUTH_API_VERSION = '2019-08-01';
+class Client
+{
+    public const OAUTH_API_VERSION = '2021-12-13';
 
     public const VAULT_API_VERSION = '7.0';
 
@@ -22,7 +23,8 @@ class Client {
     /**
      * Client constructor
      */
-    public function __construct(iterable $options = []) {
+    public function __construct(iterable $options = [])
+    {
         $this->options = $options;
         $this->client = new \GuzzleHttp\Client();
         $this->accessToken = $this->getAccessToken();
@@ -31,7 +33,7 @@ class Client {
     /**
      * Wrapper for HTTP GET requests
      * @param $url
-     * @param string $accessToken
+     * @param string|null $accessToken
      * @param string $accessTokenHeader
      * @param string $apiVersion
      * @return mixed
@@ -39,24 +41,25 @@ class Client {
     public function get(string $url, string $accessToken = null, string $accessTokenHeader = 'Authorization', string $apiVersion = self::VAULT_API_VERSION) {
         $url = Url::fromString($url)->withQueryParameter('api-version', $apiVersion);
         return json_decode($this->client->get($url, [
-            'headers' => [$accessTokenHeader => $accessToken ?? $this->accessToken, 'metadata' => 'true'],
+            'headers' => [$accessTokenHeader => $accessToken ?? $this->accessToken],
         ])->getBody());
     }
 
-	/**
-	 * Wrapper for HTTP Post requests
-	 * @param string $url
-	 * @param array $body
-	 * @param string|null $accessToken
-	 * @param string $accessTokenHeader
-	 * @param string $apiVersion
-	 * @return mixed
-	 */
-    public function post(string $url, array $body, string $accessToken = null, string $accessTokenHeader = 'Authorization', string $apiVersion = self::VAULT_API_VERSION) {
+    /**
+     * Wrapper for HTTP Post requests
+     * @param string $url
+     * @param array $body
+     * @param string|null $accessToken
+     * @param string $accessTokenHeader
+     * @param string $apiVersion
+     * @return mixed
+     */
+    public function post(string $url, array $body, string $accessToken = null, string $accessTokenHeader = 'Authorization', string $apiVersion = self::VAULT_API_VERSION)
+    {
         $url = Url::fromString($url)->withQueryParameter('api-version', $apiVersion);
         return json_decode($this->client->post($url, [
             'headers' => [$accessTokenHeader => $accessToken ?? $this->accessToken],
-			'body' => $body,
+            'body' => $body,
         ])->getBody());
     }
 
@@ -83,29 +86,40 @@ class Client {
         // Get MSI endpoint & token from environment (App Service) or use hardcoded values in case of VM
         $endpoint = $this->env('IDENTITY_ENDPOINT', 'http://169.254.169.254/metadata/identity/oauth2/token');
         $idHeaderValue = $this->env('IDENTITY_HEADER', 'true');
-        $idHeaderName = !empty($this->env('IDENTITY_HEADER')) ? 'X-IDENTITY-HEADER' : 'Metadata';
         $resource = 'https://vault.azure.net';
+        $url = Url::fromString($endpoint);
 
-        $endpoint = Url::fromString($endpoint)->withQueryParameter('resource', $resource);
-        return 'Bearer ' . $this->get($endpoint, $idHeaderValue, $idHeaderName, self::OAUTH_API_VERSION)->access_token;
+        $url = $url->withQueryParameter('resource', $resource)
+            ->withQueryParameter('api-version', self::OAUTH_API_VERSION);
+
+        if (!empty($this->option('AZURE_CLIENT_ID'))) {
+            $url = $url->withQueryParameter('client_id', $this->option('AZURE_CLIENT_ID'));
+        }
+
+        $bearer = json_decode($this->client->get($url, [
+            'headers' => ['X-IDENTITY-HEADER' => $idHeaderValue ?? $this->accessToken, 'metadata' => 'true'],
+        ])->getBody())->access_token;
+        return 'Bearer ' . $bearer;
     }
 
     /**
      * Get access token using managed identity
      * @return string
      */
-    protected function getAccessToken() {
-        if (!empty($this->option("AZURE_CLIENT_ID"))) {
-            return $this->getClientCredentialsToken($this->option('AZURE_TENANT_ID')
-                                                  , $this->option('AZURE_CLIENT_ID')
-                                                  , $this->option('AZURE_CLIENT_SECRET')
-                                                );
+    protected function getAccessToken()
+    {
+        if (!empty($this->option("AZURE_CLIENT_SECRET"))) {
+            return $this->getClientCredentialsToken(
+                $this->option('AZURE_TENANT_ID'),
+                $this->option('AZURE_CLIENT_ID'),
+                $this->option('AZURE_CLIENT_SECRET')
+            );
         } else {
             return $this->getManagedIdentityToken();
         }
     }
 
-        /**
+    /**
      * Returns the option value if it exists
      * otherwise it search in the environment variable,
      * if it stills not exist, the passed fallback value
@@ -113,7 +127,8 @@ class Client {
      * @param string $fallback
      * @return array|string
      */
-    private function option(string $name, string $fallback = '') {
+    private function option(string $name, string $fallback = '')
+    {
         return isset($this->options[$name]) ? $this->options[$name] : $this->env($name, $fallback);
     }
 
@@ -124,7 +139,8 @@ class Client {
      * @param string $fallback
      * @return array|string
      */
-    private function env(string $name, string $fallback = '') {
+    private function env(string $name, string $fallback = '')
+    {
         return isset($_SERVER[$name]) ? $_SERVER[$name] : $fallback;
     }
 }
