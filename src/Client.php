@@ -7,7 +7,7 @@ use Spatie\Url\Url;
 
 class Client
 {
-    public const OAUTH_API_VERSION = '2021-12-13';
+    public const OAUTH_API_VERSION = '2019-08-01';
 
     public const VAULT_API_VERSION = '7.0';
 
